@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @default(autoincrement()) @id  // @default(autoincrement()) significa que será autoincrementado
+  email     String   @unique                        // @unique significa que será único
+  name      String?                                 // ? significa que é opcional
+  posts     Post[]
+}
+
+model Post {
+  id        Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())                                  // @default(now()) significa que será preenchido com a data atual
+  updatedAt DateTime @updatedAt                                       // @updatedAt significa que será preenchido com a data atual toda vez que o registro for atualizado
+  title     String
+  content   String?
+  published Boolean  @default(false)                                  // @default(false) significa que será preenchido com false por padrão
+  author    User     @relation(fields: [authorId], references: [id])  // @relation significa que é uma relação com outra tabela
+  authorId  Int
+}
